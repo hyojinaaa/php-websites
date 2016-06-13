@@ -1,3 +1,6 @@
+<!-- Copy css and javascript from master -->
+<?php $this->layout('master') ?>  
+
   <body id="stream-page">
 
     <nav class="row expanded">

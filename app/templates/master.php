@@ -11,6 +11,8 @@
   </head>
 
 
+<?php echo $this->section('content') ?>
+
 
 
   <script src="js/vendor/jquery.js"></script>
