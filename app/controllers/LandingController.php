@@ -3,9 +3,16 @@
 class LandingController {
 
 	// Properties (attributes)
-
+	private $emailMessage;
 
 	// Constructor
+	public function __construct() {
+
+		// If the use has submitted the registration form
+		if( isset($_POST['new-account']) ) {
+			$this->validateResistrationForm();
+		}
+	}
 
 	// Methods (functions)
 	public function registerAccount() {
@@ -26,7 +33,25 @@ class LandingController {
 		// Instantiate (create instance of) Plates library
 		$plates = new League\Plates\Engine('app/templates');
 
-		echo $plates->render('landing');
+		// Prepare a container for data
+		$data = [];
+
+		// If there is an E-mail error
+		if($this->emailMessage != '') {
+			$data['emailMessage'] = $this->emailMessage;
+		}
+
+		echo $plates->render('landing', $data);
+
+	}
+
+	private function validateResistrationForm() {
+		
+		// Make sure the E-mail has been provided and is valid
+		if( $_POST['email'] == '' ) {
+			// E-mail is invalid
+			$this->emailMessage = 'Invalid E-mail';
+		}
 
 	}
 
