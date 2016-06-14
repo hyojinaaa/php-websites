@@ -8,17 +8,19 @@ require 'vendor/autoload.php';
 // Load appropriate page
 
 // Has the user requested a page?
-if( isset($_GET['page']) ) {
+// if( isset($_GET['page']) ) {
 
-	// Requested page
-	$page = $_GET['page'];
+// 	// Requested page
+// 	$page = $_GET['page'];
 
-} else {
+// } else {
 
-	// Home page
-	$page = 'landing';
+// 	// Home page
+// 	$page = 'landing';
 
-}
+// }
+
+$page = isset($_GET['page']) ? $_GET['page'] : 'landing';
 
 // Load the appropriate file based on page
 switch($page) {

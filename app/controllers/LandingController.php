@@ -4,6 +4,7 @@ class LandingController {
 
 	// Properties (attributes)
 	private $emailMessage;
+	private $passwordMessage;
 
 	// Constructor
 	public function __construct() {
@@ -41,18 +42,45 @@ class LandingController {
 			$data['emailMessage'] = $this->emailMessage;
 		}
 
+		// If there is an password error
+		if($this->passwordMessage != '') {
+			$data['passwordMessage'] = $this->passwordMessage;
+		}
+
 		echo $plates->render('landing', $data);
 
 	}
 
 	private function validateResistrationForm() {
+
+		$totalErrors = 0;
 		
 		// Make sure the E-mail has been provided and is valid
 		if( $_POST['email'] == '' ) {
 			// E-mail is invalid
 			$this->emailMessage = 'Invalid E-mail';
+			$totalErrors++;
 		}
 
-	}
+		// If password is less than 8 characters long
+		if( strlen($_POST['password']) < 8 ) {
+			// Password is too short
+			$this->passwordMessage = 'Password must be at least 8 characters';
+			$totalErrors++;
+		}
 
+		// Determine if this data is valid to go into the database
+		if( $totalErrors == 0 ) {
+
+			// Validation passed! :D
+			
+
+		}
+	}	
 }
+
+
+
+
+
+
