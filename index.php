@@ -4,7 +4,7 @@ session_start();
 
 // Make everthing in the vendor folder available to use
 require 'vendor/autoload.php';
-
+require 'app/controllers/PageController.php';
 
 
 // Load appropriate page
@@ -53,7 +53,8 @@ switch($page) {
 
 	// Stream page
 	case 'stream':
-		
+		require 'app/controllers/StreamController.php';
+		$controller = new StreamController($dbc);
 	break;
 
 	default:
