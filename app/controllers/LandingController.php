@@ -5,9 +5,13 @@ class LandingController {
 	// Properties (attributes)
 	private $emailMessage;
 	private $passwordMessage;
+	private $dbc;
 
 	// Constructor
-	public function __construct() {
+	public function __construct($dbc) {
+
+		// Save this database connection for later
+		$this->dbc = $dbc;
 
 		// If the use has submitted the registration form
 		if( isset($_POST['new-account']) ) {
@@ -73,7 +77,16 @@ class LandingController {
 		if( $totalErrors == 0 ) {
 
 			// Validation passed! :D
-			
+			// Store user's data
+
+
+			// Filter user data before using it in a query
+			$filteredEmail = $this->dbc->real_escape_string( $_POST['email'] );
+
+			// Hash the password
+			$hash = password_hash( $_POST['password'], PASSWORD_BCRYPT );
+
+			die($hash);
 
 		}
 	}	
