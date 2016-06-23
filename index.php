@@ -1,5 +1,6 @@
 <?php 
 
+session_start();
 
 // Make everthing in the vendor folder available to use
 require 'vendor/autoload.php';
@@ -50,9 +51,9 @@ switch($page) {
 		echo $plates->render('login');
 	break;
 
-	// Contact page
+	// Stream page
 	case 'stream':
-		echo $plates->render('stream');
+		
 	break;
 
 	default:

@@ -66,6 +66,22 @@ class LandingController {
 			$totalErrors++;
 		}
 
+		// Make sure the E-Mail is not in use
+		$filteredEmail = $this->dbc->real_escape_string( $_POST['email'] );
+
+		$sql = "SELECT email
+				FROM users
+				WHERE email = '$filteredEmail'  ";
+
+		// Run the query
+		$result = $this->dbc->query($sql);
+
+		// If the query failed OR there is a result
+		if( !$result || $result->num_rows > 0 ) {
+			$this->emailMessage = 'E-Mail in use';
+			$totalErrors++;
+		}
+
 		// If password is less than 8 characters long
 		if( strlen($_POST['password']) < 8 ) {
 			// Password is too short
@@ -77,16 +93,28 @@ class LandingController {
 		if( $totalErrors == 0 ) {
 
 			// Validation passed! :D
+			
 			// Store user's data
-
-
 			// Filter user data before using it in a query
-			$filteredEmail = $this->dbc->real_escape_string( $_POST['email'] );
+			
 
 			// Hash the password
 			$hash = password_hash( $_POST['password'], PASSWORD_BCRYPT );
 
-			die($hash);
+			// Prepare the SQL 
+			$sql = "INSERT INTO users (email, password)
+					VALUES ('$filteredEmail', '$hash')";
+
+			// Run the query
+			$this->dbc->query($sql);
+
+			// Check to make sure this worked
+
+			// Log the user in
+			$_SESSION['id'] = $this->dbc->insert_id;
+
+			// Redirect the user to their stream page
+			header('Location: index.php?page=stream');
 
 		}
 	}	
