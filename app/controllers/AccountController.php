@@ -53,10 +53,29 @@ class AccountController extends PageController {
 			if( $totalErrors == 0 ) {
 
 				// Form validation passed!
+
 				// Time to update the database
-				
+				$firstName = $this->dbc->real_escape_string($_POST['first-name']);
+				$lastName = $this->dbc->real_escape_string($_POST['last-name']);
+
+				$userID = $_SESSION['id'];
+
+				// Prepare the SQL
+				$sql = "UPDATE users 
+						SET first_name = '$firstName',
+							last_name = '$lastName'
+						WHERE id = $userID  ";
+
+				// Run the query
+				$this->dbc->query( $sql );
+
 			}
 
 		}
 
 }
+
+
+
+
+
