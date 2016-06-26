@@ -1,5 +1,13 @@
 <!-- Copy css and javascript from master -->
-<?php $this->layout('master') ?>  
+
+<?php 
+
+  $this->layout('master', [
+      'title'=>'Content stream',
+      'desc'=>'The latest posts from people you follow and categories you like'
+    ]);
+
+?>
 
   <body id="stream-page">
 
@@ -16,7 +24,8 @@
         </form>
       </div>
       <div class="columns large-2" id="account-bar">
-        <a href="account.html" class="button secondary">
+
+        <a href="index.php?page=account" class="button secondary">
           <img src="http://placehold.it/16" alt="">
           Your Name
         </a>
@@ -28,12 +37,14 @@
 
     <div id="grid" class="">
 
+      
+    <?php foreach($allPosts as $item): ?>
       <article class="grid-item">
-        <img src="http://placehold.it/200x400" alt="">
+        <img src="<?= $item['image'] ?>" alt="">
         <div class="grid-content">
           <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
           <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
+          <h1><?= $item['title'] ?></h1>
           <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
           <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
           <div class="media-object">
@@ -41,271 +52,15 @@
               <img src="http://placeimg.com/32/32/people">
             </div>
             <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
+              <a href="">Owner ID: <?= $item['user_id'] ?></a>
+              <a href="">Board Name</a>
             </div>
           </div>
         </div>
       </article>
 
-      <article class="grid-item">
-        <img src="http://placehold.it/200x200" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
+    <?php endforeach ?>
+      
 
-      <article class="grid-item">
-        <img src="http://placehold.it/200x50" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x300" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x400" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x300" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x200" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x400" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x100" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x100" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x200" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x500" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x100" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="grid-item">
-        <img src="http://placehold.it/200x100" alt="">
-        <div class="grid-content">
-          <a href="" class="button alert save"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Save</a>
-          <a href="" class="button secondary heart"><i class="fa fa-heart" aria-hidden="true"></i></a>
-          <h1>Mini Classic 1000</h1>
-          <a href=""><i class="fa fa-thumb-tack" aria-hidden="true"></i> 15</a>
-          <a href=""><i class="fa fa-heart" aria-hidden="true"></i> 3</a>
-          <div class="media-object">
-            <div class="media-object-section">
-              <img src="http://placeimg.com/32/32/people">
-            </div>
-            <div class="media-object-section">
-              <a href="">Owner name</a>
-              <a href="">Name of board</a>
-            </div>
-          </div>
-        </div>
-      </article>
 
     </div>
