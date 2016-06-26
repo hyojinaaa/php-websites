@@ -1,5 +1,12 @@
 <!-- Copy css and javascript from master -->
-<?php $this->layout('master') ?>  
+<?php 
+
+  $this->layout('master', [
+      'title'=>'Content stream',
+      'desc'=>'The latest posts from people you follow and categories you like'
+    ]);
+
+?>
 
   <body id="stream-page">
 
@@ -16,7 +23,7 @@
         </form>
       </div>
       <div class="columns large-2" id="account-bar">
-        <a href="account.html" class="button secondary">
+        <a href="index.php?page=account" class="button secondary">
           <img src="http://placehold.it/16" alt="">
           Your Name
         </a>
