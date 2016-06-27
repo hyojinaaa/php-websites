@@ -20,6 +20,11 @@ class AccountController extends PageController {
 				$this->processNewContactDetails();
 			}
 
+			// Did the user submit the new post form?
+			if( isset( $_POST['new-post'] ) ) {
+				$this->processNewPost();
+			}
+
 		}
 
 		public function buildHTML() {
@@ -68,6 +73,61 @@ class AccountController extends PageController {
 
 				// Run the query
 				$this->dbc->query( $sql );
+
+			}
+
+		}
+
+		private function processNewPost() {
+
+			// Count errors
+			$totalErrors = 0;
+
+			$title = trim($_POST['title']);
+			$desc = trim($_POST['desc']);
+
+			// Title
+			if( strlen ($title) == 0 ) {
+				$this->data['titleMessage'] = '<p>Required</p>';
+				$totalErrors++;
+			} elseif ( strlen ($title)  > 100 ) {
+				$this->data['titleMessage'] = '<p>Cannot be more than 100 characters</p>';
+				$totalErrors++;
+			}
+
+			// Description
+			if( strlen ($desc) == 0 ) {
+				$this->data['descMessage'] = '<p>Required</p>';
+				$totalErrors++;
+			} elseif ( strlen ($desc)  > 1000 ) {
+				$this->data['descMessage'] = '<p>Cannot be more than 1000 characters</p>';
+				$totalErrors++;
+			}
+
+			// If there are no errors
+			if( $totalErrors == 0 ) {
+
+				// Filter the data
+				$title = $this->dbc->real_escape_string($title);
+				$desc = $this->dbc->real_escape_string($desc);
+
+				// Get the ID of logged in user
+				$userID = $_SESSION['id'];
+
+				// SQL (INSERT)
+				$sql = "INSERT INTO posts (title, description, user_id)
+						VALUES ('$title', '$desc', $userID) ";
+
+				// Make sure it worked
+				$this->dbc->query( $sql );
+				if( $this->dbc->affected_rows ) {
+					$this->data['postMessage'] = 'Success!';
+				} else {
+					$this->data['postMessage'] = 'Something went wrong!';
+				}
+
+				// Success message! (or error message)
+
 
 			}
 

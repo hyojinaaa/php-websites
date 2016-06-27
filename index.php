@@ -63,6 +63,10 @@ switch($page) {
 		$controller = new AccountController($dbc);
 	break;
 
+	case 'post';
+		require 'app/controllers/PostController.php';
+		$controller = new PostController($dbc);
+	break;
 
 	default:
 		echo $plates->render('error404');
