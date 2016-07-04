@@ -58,12 +58,12 @@ switch($page) {
 		$controller = new StreamController($dbc);
 	break;
 
-	case 'account';
+	case 'account':
 		require 'app/controllers/AccountController.php';
 		$controller = new AccountController($dbc);
 	break;
 
-	case 'post';
+	case 'post':
 		require 'app/controllers/PostController.php';
 		$controller = new PostController($dbc);
 	break;

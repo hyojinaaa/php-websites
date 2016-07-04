@@ -8,6 +8,11 @@ class PostController extends PageController {
 
 		$this->dbc = $dbc;
 
+		// Did the user add a comment?
+		if( isset($_POST['new-comment']) ) {
+			$this->processNewComment();
+		}
+
 		$this->getPostData();
 	}
 
@@ -43,6 +48,7 @@ class PostController extends PageController {
 			$fName = $this->data['post']['first_name'];
 			$lName = $this->data['post']['last_name'];
 
+			// If the user does not have a name 
 			if( !$fName && !$lName ) {
 				// Anon
 				$this->data['post']['first_name'] = 'Anon';
@@ -50,6 +56,59 @@ class PostController extends PageController {
 
 		}
 
+		// Get all the comments!
+		$sql = "SELECT user_id, comment, CONCAT(first_name, ' ', last_name) AS author
+				FROM comments
+				JOIN users
+				ON comments.user_id = users.id
+				WHERE post_id = $postID
+				ORDER BY created_at DESC
+				";
+
+		$result = $this->dbc->query($sql);
+
+		// Extract the data as an associative array 
+		$this->data['allComments'] = $result->fetch_all(MYSQLI_ASSOC);
+	}
+
+	private function processNewComment() {
+
+		// Validate the comment
+		$totalErrors = 0;
+
+		// Minimum length
+
+		// Maximum length
+
+		// If passed, add to database
+		if( $totalErrors == 0 ) {
+
+			// Filter the comment 
+			$comment = $this->dbc->real_escape_string( $_POST['comment'] );
+			$userID = $_SESSION['id'];
+			$postID = $this->dbc->real_escape_string( $_GET['postid'] );
+
+			// prepare SQL
+			$sql = "INSERT INTO comments (comment, user_id, post_id) 
+					VALUES ('$comment', $userID, $postID)
+					";
+
+			// Run the SQL
+			$this->dbc->query($sql);
+
+			// Make sure the query worked
+
+		}
 
 	}
 }
+
+
+
+
+
+
+
+
+
+
