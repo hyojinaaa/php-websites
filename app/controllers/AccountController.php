@@ -1,12 +1,14 @@
 <?php 
 
+use Intervention\Image\ImageManager;
+
 class AccountController extends PageController {
 
 	private $firstNameMessage;
 	private $lastNameMessage;
 	private $emailMessage;
-
-	use Intervention\Image\ImageManager;
+	private $acceptableImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff'];
+	
 
 
 		public function __construct($dbc) {
@@ -87,10 +89,7 @@ class AccountController extends PageController {
 
 			$title = trim($_POST['title']);
 			$desc = trim($_POST['desc']);
-
-			$manager = new ImageManager(array('driver' => 'imagick'));
-			$image = $manager->make( $_FILES['image'][0]['tmp_name'] )->resize(300, 200);
-			$image->save('img/test.jpg');
+			
 
 			// Title
 			if( strlen ($title) == 0 ) {
@@ -110,8 +109,37 @@ class AccountController extends PageController {
 				$totalErrors++;
 			}
 
+			// Make sure the user has provied an image
+			if( in_array( $_FILES['image']['error'], [1,3,4] ) ) {
+				// Show error message
+				$this->data['imageMessage'] = 'Image failed to upload';
+				$totalErrors++;
+			} elseif( !in_array( $_FILES['image']['type'], $this->acceptableImageTypes ) ) {
+				$this->data['imageMessage'] = 'Must be an image (jpg, gif, png, tif etc)';
+				$totalErrors++;
+			}
+
 			// If there are no errors
 			if( $totalErrors == 0 ) {
+
+				// Instance of Intervention Image
+				$manager = new ImageManager();
+
+				// Get the file that was just uploaded
+				$image = $manager->make( $_FILES['image']['tmp_name'] );
+
+				$fileExtension = $this->getFileExtension ( $image->mime() );
+
+				$fileName = uniqid();
+
+				$image->save("img/uploads/original/$fileName$fileExtension");
+
+				$image->resize(320, null, function ($constraint) {
+    				$constraint->aspectRatio();
+				});
+
+				$image->save("img/uploads/stream/$fileName$fileExtension");
+
 
 				// Filter the data
 				$title = $this->dbc->real_escape_string($title);
@@ -121,8 +149,8 @@ class AccountController extends PageController {
 				$userID = $_SESSION['id'];
 
 				// SQL (INSERT)
-				$sql = "INSERT INTO posts (title, description, user_id)
-						VALUES ('$title', '$desc', $userID) ";
+				$sql = "INSERT INTO posts (title, description, user_id, image)
+						VALUES ('$title', '$desc', $userID, '$fileName$fileExtension') ";
 
 				// Make sure it worked
 				$this->dbc->query( $sql );
@@ -137,6 +165,32 @@ class AccountController extends PageController {
 
 			}
 
+		}
+
+		private function getFileExtension( $mimeType ) {
+
+			switch($mimeType) {
+
+				case 'image/png':
+					return '.png';
+				break;
+
+				case 'image/gif':
+					return '.gif';
+				break;
+
+				case 'image/jpeg':
+					return '.jpg';
+				break;
+
+				case 'image/bmp':
+					return '.bmp';
+				break;
+
+				case 'image/tiff':
+					return '.tif';
+				break;
+			}
 		}
 
 }
