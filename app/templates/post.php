@@ -18,6 +18,24 @@
 	<li>Post created : <?= $post['created_at'] ?></li>
 	<li>Post last updated : <?= $post['updated_at'] ?></li>
 	<li>Posted by : <?= $this->e($post['first_name']).' '.$this->e($post['last_name']) ?></li>
+	<?php 
+		if( isset($_SESSION['id']) ) {
+
+			if( $_SESSION['id'] == $post['user_id'] ){
+				// Your own post!
+				?>
+	<li>
+		<a href="index.php?page=edit-post&id=<?= $_GET['postid']  ?>">Edit</a>				
+	</li>
+	<li>
+		<a href="index.php?page=">Delete</a>
+	</li>
+				<?php 
+			}
+		}
+
+
+	?>
 </ul>
 
 <section>
