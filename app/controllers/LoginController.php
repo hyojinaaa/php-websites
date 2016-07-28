@@ -7,6 +7,9 @@ class LoginController extends PageController {
 		// Make sure the PageControllers constructor still runs
 		parent::__construct();
 
+		// If the user is logged in them redirect them to their stream page
+		$this->mustBeLoggedOut();
+
 		// Save the database connection
 		$this->dbc = $dbc;
 
@@ -48,7 +51,7 @@ class LoginController extends PageController {
 			$filteredEmail = $this->dbc->real_escape_string( $_POST['email'] );
 
 			// Prepare SQL
-			$sql = "SELECT id, password 
+			$sql = "SELECT id, password, privilege
 					FROM users
 					WHERE email= '$filteredEmail'   ";
 
@@ -69,6 +72,7 @@ class LoginController extends PageController {
 				if( $passwordResult == true ) {
 					// Log the user in
 					$_SESSION['id'] = $userData['id'];
+					$_SESSION['privilege'] = $userData['privilege'];
 
 					header('Location: index.php?page=stream');
 				} else {

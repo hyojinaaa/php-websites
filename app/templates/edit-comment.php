@@ -7,6 +7,10 @@
 
 ?>
 
+<body>
+
+<?= $this->insert('nav') ?>
+
 <h1>Edit your comment</h1>
 
 <form action="index.php?page=edit-comment&id=<?= $_GET['id'] ?>" method="post">

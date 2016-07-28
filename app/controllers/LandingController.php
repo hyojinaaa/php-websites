@@ -12,6 +12,9 @@ class LandingController extends PageController {
 		// Save this database connection for later
 		$this->dbc = $dbc;
 
+		$this->mustBeLoggedOut();
+
+
 		// If the use has submitted the registration form
 		if( isset($_POST['new-account']) ) {
 			$this->validateResistrationForm();
@@ -111,6 +114,7 @@ class LandingController extends PageController {
 
 			// Log the user in
 			$_SESSION['id'] = $this->dbc->insert_id;
+			$_SESSION['privilege'] = 'user';
 
 			// Redirect the user to their stream page
 			header('Location: index.php?page=stream');

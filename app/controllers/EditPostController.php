@@ -1,6 +1,10 @@
 <?php 
 
+use Intervention\Image\ImageManager;
+
 class EditPostController extends PageController {
+
+	private $acceptableImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff'];
 
 	public function __construct($dbc) {
 
@@ -37,8 +41,13 @@ class EditPostController extends PageController {
 		// Prepare the query
 		$sql = "SELECT title, description, image 
 				FROM posts 
-				WHERE id = $postID
-				AND user_id = $userID";
+				WHERE id = $postID ";
+
+		if( $_SESSION['privilege'] != 'admin' ) {
+			$sql .= " AND user_id = $userID";
+		}
+
+				// AND user_id = $userID";
 
 		// Run the query
 		$result = $this->dbc->query($sql);
@@ -61,10 +70,13 @@ class EditPostController extends PageController {
 				// Use the original title
 				$result = $result->fetch_assoc();
 				$this->data['originalTitle'] = $result['title'];
+
+				// Make sure we use the current image, otherwise it disappears
+				$this->data['post']['image'] = $result['image'];
 				
 			} else {
 				// Use the database data
-				$this->data['post'] = $result->fetch_assoc();
+				$result = $result->fetch_assoc();
 
 				$this->data['post'] = $result;
 
@@ -82,7 +94,7 @@ class EditPostController extends PageController {
 
 		// Make life easier
 		$title = $_POST['title'];
-		$desc = $_POST['desc'];
+		$desc = $_POST['description'];
 
 		// Title
 		if( strlen($title) > 100 ) {
@@ -96,27 +108,127 @@ class EditPostController extends PageController {
 			$this->data['descError'] = 'At most 1000';
 		}
 
+		// Make sure the user has provied an image
+		if( $_FILES['image']['name'] != '' ) {
+			
+			if( in_array( $_FILES['image']['error'], [1,3] ) ) {
+				// Show error message
+				$this->data['imageMessage'] = 'Image failed to upload';
+				$totalErrors++;
+			} elseif( !in_array( $_FILES['image']['type'], $this->acceptableImageTypes ) ) {
+				$this->data['imageMessage'] = 'Must be an image (jpg, gif, png, tif etc)';
+				$totalErrors++;
+			}
+		}
+
 		// If there are no errors
 		if( $totalErrors == 0 ) {
+
+			$postID = $this->dbc->real_escape_string($_GET['id']);
+
+			// Delete the old images
+			// They are wasting space otherwise
+			$sql = "SELECT image FROM posts WHERE id = $postID";
+
+			// Run the query
+			$result = $this->dbc->query($sql);
+
+			// Extract the data
+			$result = $result->fetch_assoc();
+
+			// Get the image name
+			$imageName = $result['image'];
+
+			
+			// iF the user uploaded an image
+			if( $_FILES['image']['name'] != '' ) {
+
+				// Instance of Intervention Image
+				$manager = new ImageManager();
+
+				// Get the file that was just uploaded
+				$image = $manager->make( $_FILES['image']['tmp_name'] );
+
+				$fileExtension = $this->getFileExtension ( $image->mime() );
+
+				$fileName = uniqid();
+
+				$image->save("img/uploads/original/$fileName$fileExtension");
+
+				$image->resize(320, null, function ($constraint) {
+	    			$constraint->aspectRatio();
+				});
+
+				$image->save("img/uploads/stream/$fileName$fileExtension");
+
+				unlink("img/uploads/original/$imageName");
+				unlink("img/uploads/stream/$imageName");
+
+				// Change the $imageName to be the new file name
+				$imageName = $fileName.$fileExtension;
+
+		}
+
 
 			// Filter the data
 			$title = $this->dbc->real_escape_string($title);
 			$desc = $this->dbc->real_escape_string($desc);
-			$postID = $this->dbc->real_escape_string($_GET['id']);
 			$userID = $_SESSION['id'];
+
+			// Did the user upload an image?
 
 			// Prepare the SQL
 			$sql = "UPDATE posts
 					SET title = '$title',
-						description = '$desc'
-					WHERE id = $postID
-					AND user_id = $userID";
+						description = '$desc',
+						image = '$imageName'
+					WHERE id = $postID";
+
+		// If the user is not and admin
+ 		if( $_SESSION['privilege'] != 'admin' ) {
+ 			// Additional check
+ 			$sql .= " AND user_id = $userID";
+ 		}
+					// AND user_id = $userID";
 
 			$this->dbc->query($sql);
 
-			// Redirect the user to the post page
-			header("Location: index.php?page=post&postid=$postID");
+			// Validation
+			if( $this->dbc->affected_rows == 0 ) {
+				$this->data['updateMessage'] = 'Nothing changed';
+			} else {
+				// Redirect the user to the post page
+				header("Location: index.php?page=post&postid=$postID");
+			}
+
+			
 		}
+	}
+
+	private function getFileExtension( $mimeType ) {
+
+			switch($mimeType) {
+
+				case 'image/png':
+					return '.png';
+				break;
+
+				case 'image/gif':
+					return '.gif';
+				break;
+
+				case 'image/jpeg':
+					return '.jpg';
+				break;
+
+				case 'image/bmp':
+					return '.bmp';
+				break;
+
+				case 'image/tiff':
+					return '.tif';
+				break;
+			}
 	}
 }
 

@@ -8,6 +8,11 @@ class PostController extends PageController {
 
 		$this->dbc = $dbc;
 
+		// Does the user want to delete this post?
+		if( isset($_GET['delete']) ) {
+			$this->deletePost();
+		}
+
 		// Did the user add a comment?
 		if( isset($_POST['new-comment']) ) {
 			$this->processNewComment();
@@ -99,6 +104,44 @@ class PostController extends PageController {
 			// Make sure the query worked
 
 		}
+
+	}
+
+	private function deletePost() {
+
+		// If user is not logged in
+		if( !isset($_SESSION['id']) ) {
+			return;
+		}
+
+		// Make sure the user owns this post
+		$postID = $this->dbc->real_escape_string($_GET['postid']);
+		$userID = $_SESSION['id'];
+		$privilege = $_SESSION['privilege'];
+
+		// Delete the image first
+		$sql = "SELECT image
+				FROM posts
+				WHERE id = $postID";
+
+		// Run this query
+		$result = $this->dbc->query($sql);
+		$result = $result->fetch_assoc();
+
+		$filename = $result['image'];
+
+		die($filename);
+
+		// Prepare the SQL
+		$sql = "DELETE FROM posts
+				WHERE id = $postID ";
+
+		// If the user is not an admin
+		// They must own the post
+		if( $private != 'admin' ) {
+			$sql .= " AND user_id = $user_id";
+		}
+
 
 	}
 }

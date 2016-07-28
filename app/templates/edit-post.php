@@ -7,6 +7,10 @@
 
 ?>
 
+<body>
+
+<?= $this->insert('nav') ?>
+
 <h1>Edit post: <?= $this->e($originalTitle) ?></h1>
 
 <form action="<?= $_SERVER['REQUEST_URI'] ?>" method="post" enctype="multipart/form-data">
@@ -18,8 +22,8 @@
 	</div>
 
 	<div>
-		<label for="desc">Description: </label>
-		<textarea id="desc" name="description"><?= $post['desc'] ?></textarea>
+		<label for="description">Description: </label>
+		<textarea id="description" name="description"><?= $post['description'] ?></textarea>
 		<?= isset($descError) ? $descError : '' ?>
 	</div>
 
@@ -28,5 +32,6 @@
 	<input type="file" name="image">
 
 	<input type="submit" name="edit-post">
+	<?= isset($updateMessage) ? $updateMessage : '' ?>
 
 </form>
