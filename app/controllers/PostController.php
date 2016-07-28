@@ -124,23 +124,38 @@ class PostController extends PageController {
 				FROM posts
 				WHERE id = $postID";
 
+		// If the user is not an admin
+		if( $privilege != 'admin' ) {
+			$sql .= " AND user_id = $userID";
+		}		
+
 		// Run this query
 		$result = $this->dbc->query($sql);
+
+		// If the query failed
+		// Either post doesn't exist, or you don't own the post
+		if( !$result || $result->num_rows == 0 ) {
+			return;
+		}
+
 		$result = $result->fetch_assoc();
 
 		$filename = $result['image'];
 
-		die($filename);
+		unlink("image/unloads/original/$filename");
+		unlink("image/unloads/stream/$filename");
 
 		// Prepare the SQL
 		$sql = "DELETE FROM posts
-				WHERE id = $postID ";
+				WHERE id = $postID";
 
-		// If the user is not an admin
-		// They must own the post
-		if( $private != 'admin' ) {
-			$sql .= " AND user_id = $user_id";
-		}
+		// Run the query
+		$this->dbc->query($sql);
+
+		// Redirect the user back to stream
+		// This post is dead :(
+		header('Location: index.php?page=stream');
+		die();
 
 
 	}
